@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
+import json
 
 app = FastAPI()
 
@@ -11,17 +12,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Sample data: Marks of 100 imaginary students
-marks_data = {
-    "Alice": 10,
-    "Bob": 20,
-    "Charlie": 30,
-    "David": 40,
-    "Eve": 50,
-    # Add more names and marks as needed
-}
+# Load the marks data from a JSON file
+def load_marks_data():
+    with open("q-vercel-python.json", "r") as file:
+        return json.load(file)
+
+marks_data = load_marks_data()
 
 @app.get("/api")
 def get_marks(names: list[str] = Query(...)):
     marks = [marks_data.get(name, 0) for name in names]
+    return {"marks": marks}
+ame in names]
     return {"marks": marks}
